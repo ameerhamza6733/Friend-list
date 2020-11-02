@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_margin="16dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Fragments.CreateAccountWithEmailFragment">
+  <ProgressBar
+      android:visibility="gone"
+      android:id="@+id/progressBar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"/>
+   <EditText
+
+       android:hint="Name"
+       android:inputType="textPersonName"
+       android:id="@+id/tvEnterName"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"/>
+    <EditText
+        android:inputType="textPersonName"
+        android:visibility="gone"
+        android:hint="User Name"
+        android:id="@+id/tvUserName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:id="@+id/enterEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:id="@+id/enterPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+        <EditText
+
+        android:hint="Re inter Password"
+        android:inputType="textPassword"
+        android:id="@+id/enterPassword2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:text="Create Acount"
+        android:id="@+id/btCreateAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

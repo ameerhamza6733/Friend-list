@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Friend list</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_person_from_contacts_rationale">Please provide contacts permission</string>
+</resources>

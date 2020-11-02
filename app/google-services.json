@@ -1,0 +1,93 @@
+{
+  "project_info": {
+    "project_number": "213879951044",
+    "firebase_url": "https://camerarecorder-6ac17.firebaseio.com",
+    "project_id": "camerarecorder-6ac17",
+    "storage_bucket": "camerarecorder-6ac17.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:213879951044:android:144016dd433c5b4325c391",
+        "android_client_info": {
+          "package_name": "com.app.friendlist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "213879951044-p5j14alnok8h2l77fn9p54loobkqdilc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.friendlist",
+            "certificate_hash": "da8fc7e8a19cdee00be5d706efce45022a7f98ba"
+          }
+        },
+        {
+          "client_id": "213879951044-6a00gsiq648ji6v3rgm8baf4jajuk13m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3z5sUQPNJJpBUOyABGFVEzpCPBwdQqWE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "213879951044-6a00gsiq648ji6v3rgm8baf4jajuk13m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:213879951044:android:2fe6cc01b4941c0425c391",
+        "android_client_info": {
+          "package_name": "com.daasuu.camerarecorder_androidtesttest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "213879951044-9nmnqbef7e4su678216t2cuqkkoahnu3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.daasuu.camerarecorder_androidtesttest",
+            "certificate_hash": "af1fa27c9835ed7490522efe3d67c8cba8d46432"
+          }
+        },
+        {
+          "client_id": "213879951044-3din3bp0fpadsn2otmedl6ul33d9qhou.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.daasuu.camerarecorder_androidtesttest",
+            "certificate_hash": "da8fc7e8a19cdee00be5d706efce45022a7f98ba"
+          }
+        },
+        {
+          "client_id": "213879951044-6a00gsiq648ji6v3rgm8baf4jajuk13m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3z5sUQPNJJpBUOyABGFVEzpCPBwdQqWE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "213879951044-6a00gsiq648ji6v3rgm8baf4jajuk13m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
