@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.app.friendlist.Model.Friend;
 import com.app.friendlist.Model.User;
 import com.app.friendlist.R;
 import com.app.friendlist.ViewModel.FriendViewModel;
+import com.app.friendlist.ViewModel.LoginViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
@@ -35,13 +37,17 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class MyFriendsListFragment extends Fragment {
     private FriendViewModel friendViewModel;
+    private LoginViewModel loginViewModel;
+    private Observer<User> observerCurrentUser;
     private Observer<List<Friend>> friendObsersList;
     private static final int RC_READ_CONTACTS = 533;
+    private static final String TAG="MyFriendsListFragment";
+    private User currentUser;
+
     private FloatingActionButton fabAddFromPhoneContant;
     private FriendListAdupter friendListAdupter;
     private RecyclerView recyclerView;
     private TextView tvNoFriends;
-
     private ProgressBar progressBar;
     public MyFriendsListFragment() {
         // Required empty public constructor
@@ -50,8 +56,12 @@ public class MyFriendsListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
+        observerCurrentUser=new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                currentUser=user;
+            }
+        };
     }
 
     @Override
@@ -69,14 +79,17 @@ public class MyFriendsListFragment extends Fragment {
         recyclerView=view.findViewById(R.id.recylerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
          fabAddFromPhoneContant = view.findViewById(R.id.fabAddPersonFromContant);
+         loginViewModel=new ViewModelProvider(this).get(LoginViewModel.class);
+         loginViewModel.userLiveData().observe(getViewLifecycleOwner(),observerCurrentUser);
 
     }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("My Friends");
 
+        ((MainActivity)getActivity()).getToolbar().setTitle("Friend List");
         fabAddFromPhoneContant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,7 +106,7 @@ public class MyFriendsListFragment extends Fragment {
                     tvNoFriends.setVisibility(View.VISIBLE);
                 }else {
                     if (friendListAdupter==null){
-                        friendListAdupter=new FriendListAdupter(users);
+                        friendListAdupter=new FriendListAdupter(users,getActivity(),currentUser);
                     }
                     tvNoFriends.setVisibility(View.GONE);
                     recyclerView.setAdapter(friendListAdupter);
@@ -102,6 +115,15 @@ public class MyFriendsListFragment extends Fragment {
         };
         friendViewModel=new ViewModelProvider(this).get(FriendViewModel.class);
         friendViewModel.getFriendList().observe(getViewLifecycleOwner(),friendObsersList);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume");
+        if (fabAddFromPhoneContant!=null){
+            fabAddFromPhoneContant.setVisibility(View.VISIBLE);
+        }
     }
 
     @AfterPermissionGranted(RC_READ_CONTACTS)

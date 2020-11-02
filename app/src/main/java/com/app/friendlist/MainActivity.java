@@ -12,6 +12,7 @@ import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.app.friendlist.Fragments.ChooseLoginOrCreateFragment;
 import com.app.friendlist.Fragments.FragmentShowPhoneContant;
@@ -30,28 +31,37 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private MaterialSearchView searchView;
-
+    private FragmentManager fragmentManager;
+    private Toolbar toolbar;
 
     @Override
     protected void onStart() {
         super.onStart();
         Contacts.initialize(this);
+        SharedPref.init(this);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+         fragmentManager = getSupportFragmentManager();
+        firebaseAuth=FirebaseAuth.getInstance();
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
         searchView.setVoiceSearch(false);
         searchView.setEllipsize(true);
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                replaceFragments(SearchFriendFragment.newInstance(query));
+                if (firebaseAuth.getCurrentUser()!=null){
+                    SharedPref.write(SharedPref.SEARCH_TERM,query);
+                    replaceFragments(SearchFriendFragment.class,"SearchFriendFragment");
+                }else {
+                    Toast.makeText(MainActivity.this, "Please login first", Toast.LENGTH_SHORT).show();
+                }
+
                 return true;
             }
 
@@ -62,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        firebaseAuth=FirebaseAuth.getInstance();
+
         if (firebaseAuth.getCurrentUser()==null){
 
             replaceFragments(ChooseLoginOrCreateFragment.class,"ChooseLoginOrCreateFragment");
@@ -83,21 +93,15 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
+
 
         if (fragmentManager.findFragmentByTag ( tag ) == null){
             fragmentManager.beginTransaction().replace(R.id.fragment_contrainer, fragment).addToBackStack(tag)
                     .commit();
         }else {
-            fragmentManager.beginTransaction().replace(R.id.fragment_contrainer, fragmentManager.findFragmentByTag ( tag )).commit();
+            fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag ( tag ));
+          //  fragmentManager.beginTransaction().replace(R.id.fragment_contrainer, fragmentManager.findFragmentByTag ( tag )).commit();
         }
-
-    }  public void replaceFragments(Fragment fragmentClass) {
-
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fragment_contrainer, fragmentClass)
-                .commit();
 
     }
     @Override
@@ -105,8 +109,15 @@ public class MainActivity extends AppCompatActivity {
         if (searchView.isSearchOpen()) {
             searchView.closeSearch();
         } else {
-            super.onBackPressed();
+
+                super.onBackPressed();
+
+
         }
+    }
+
+    public MaterialSearchView getSearchView() {
+        return searchView;
     }
 
     @Override
@@ -134,5 +145,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    public Toolbar getToolbar() {
+        return toolbar;
+    }
 }

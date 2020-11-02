@@ -1,5 +1,7 @@
 package com.app.friendlist.ViewModel;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -24,15 +26,18 @@ public class FriendViewModel extends ViewModel {
     private MutableLiveData<List<Friend>> userMutableLiveData;
     private MutableLiveData<List<User>> userSearchQureryResult;
     private MutableLiveData<String> friendAddedMutableLiveDate;
+    private MutableLiveData<String> friendRemoveMutabelLiveDate;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private ValueEventListener searchByUserNameEventListener;
     private ValueEventListener valueEventListener;
     private FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
     private List<Friend> userList;
+    private String TAG="FriendViewModel";
 
     public LiveData<List<Friend>> getFriendList(){
 
         if (userMutableLiveData==null){
+            Log.d(TAG,"geting friend list from server");
             userMutableLiveData=new MutableLiveData<>();
             userList= new ArrayList<>();
             if (valueEventListener==null){
@@ -80,11 +85,48 @@ public class FriendViewModel extends ViewModel {
             };
         }
         database.getReference("users")
-                .orderByChild("name")
+                .orderByChild("displayName")
                 .startAt(user)
                 .endAt(user)
                 .addListenerForSingleValueEvent(searchByUserNameEventListener);
     return userSearchQureryResult;
+    }
+
+    public LiveData<String> deleteFriend(final User me,final  User friend){
+        HashMap<String, Boolean> map = new HashMap<>();
+        map.put(friend.getuID(), false);
+        if (friendRemoveMutabelLiveDate==null)
+            friendRemoveMutabelLiveDate=new MutableLiveData<>();
+
+        database.getReference("myFriends")
+                .child(me.getuID())
+                .setValue(map)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                        if (task.isSuccessful()) {
+                            database.getReference("myFriendList")
+                                    .child(me.getuID())
+                                    .child(friend.getuID())
+                                    .removeValue()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()){
+                                                friendRemoveMutabelLiveDate.setValue(CreateAccountViewModel.SUCCESS);
+                                            }else {
+                                                friendRemoveMutabelLiveDate.setValue(task.getException().getMessage());
+                                            }
+                                        }
+                                    });
+                        } else {
+                            friendRemoveMutabelLiveDate.setValue(task.getException().getMessage());
+
+                        }
+                    }
+                });
+        return friendRemoveMutabelLiveDate;
     }
 
     public LiveData<String> makeFriend(final User me,final User friend) {

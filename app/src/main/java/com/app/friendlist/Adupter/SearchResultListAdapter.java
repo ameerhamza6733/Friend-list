@@ -18,6 +18,7 @@ import com.app.friendlist.Fragments.MyFriendsListFragment;
 import com.app.friendlist.MainActivity;
 import com.app.friendlist.Model.User;
 import com.app.friendlist.R;
+import com.app.friendlist.SharedPref;
 import com.app.friendlist.ViewModel.CreateAccountViewModel;
 import com.app.friendlist.ViewModel.FriendViewModel;
 
@@ -31,6 +32,8 @@ public class SearchResultListAdapter extends RecyclerView.Adapter<SearchResultLi
     private Observer<String> observerFriend;
     private Context context;
 
+
+
     public SearchResultListAdapter(List<User> searchUserList, final Context context, User currentUser) {
         this.searchUserList = searchUserList;
         this.context=context;
@@ -40,6 +43,7 @@ public class SearchResultListAdapter extends RecyclerView.Adapter<SearchResultLi
             @Override
             public void onChanged(String s) {
                 if (s.equals(CreateAccountViewModel.SUCCESS)){
+                    SharedPref.write(SharedPref.REFRESH_FRIEND_LIST,true);
                     ((MainActivity)context).replaceFragments(MyFriendsListFragment.class,"MyFriendsListFragment");
                 }else {
                     Toast.makeText(context,"Error"+s,Toast.LENGTH_LONG).show();

@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.app.friendlist.Adupter.SearchResultListAdapter;
+import com.app.friendlist.MainActivity;
 import com.app.friendlist.Model.User;
 import com.app.friendlist.R;
+import com.app.friendlist.SharedPref;
 import com.app.friendlist.ViewModel.FriendViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,13 +37,13 @@ public class SearchFriendFragment extends Fragment {
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
     private SearchResultListAdapter searchResultListAdapter;
+    private String TAG="SearchFriendFragment";
 
-    public static SearchFriendFragment newInstance(String searchQurey) {
-        Bundle bundle = new Bundle();
-        bundle.putString("searchQuery",searchQurey);
-        SearchFriendFragment searchFriendFragment =new SearchFriendFragment();
-        searchFriendFragment.setArguments(bundle);
-        return searchFriendFragment;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG,"onCreate");
     }
 
     @Override
@@ -62,7 +65,9 @@ public class SearchFriendFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-       String query= getArguments().getString("searchQuery","");
+        Log.d(TAG,"onActivityCreated");
+        ((MainActivity)getActivity()).getToolbar().setTitle("Search Result");
+       String query= SharedPref.read(SharedPref.SEARCH_TERM,"");
        searchResultListObserver=new Observer<List<User>>() {
            @Override
            public void onChanged(List<User> users) {

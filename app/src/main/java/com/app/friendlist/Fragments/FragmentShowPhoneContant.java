@@ -3,6 +3,8 @@ package com.app.friendlist.Fragments;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,6 +24,7 @@ import com.app.friendlist.MainActivity;
 import com.app.friendlist.Model.Friend;
 import com.app.friendlist.Model.User;
 import com.app.friendlist.R;
+import com.app.friendlist.SharedPref;
 import com.app.friendlist.ViewModel.CreateAccountViewModel;
 import com.app.friendlist.ViewModel.FriendViewModel;
 import com.app.friendlist.ViewModel.LoginViewModel;
@@ -41,6 +44,13 @@ class FragmentShowPhoneContant extends Fragment {
     private LoginViewModel loginViewModel;
     private ListView contantListView;
     private User currentUser;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -66,7 +76,8 @@ class FragmentShowPhoneContant extends Fragment {
             public void onChanged(String s) {
                 progressBar.setVisibility(View.INVISIBLE);
                 if (s.equals(CreateAccountViewModel.SUCCESS)){
-                    ((MainActivity)getActivity()).replaceFragments(MyFriendsListFragment.class,"MyFriendsListFragment2");
+                    SharedPref.write(SharedPref.REFRESH_FRIEND_LIST,true);
+                    ((MainActivity)getActivity()).replaceFragments(MyFriendsListFragment.class,"MyFriendsListFragment");
 
                 }else {
                     Toast.makeText(getActivity(),"Error :"+s,Toast.LENGTH_LONG).show();
@@ -97,5 +108,23 @@ class FragmentShowPhoneContant extends Fragment {
             }
 
         });
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((MainActivity)getActivity()).getToolbar().setTitle("Add from contacts");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem item=menu.findItem(R.id.action_search);
+        if(item!=null)
+            item.setVisible(false);
     }
 }

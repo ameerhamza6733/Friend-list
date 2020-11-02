@@ -3,7 +3,10 @@ package com.app.friendlist.Model;
 public class Friend extends User {
     private boolean registerUser;
 
+
+
     public Friend() {
+        this.registerUser=true;
     }
 
     public boolean isRegisterUser() {
