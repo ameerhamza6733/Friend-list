@@ -4,7 +4,7 @@ public class User {
     private String email;
     private String phoneNumber;
     private String displayName;
-    private String userName;
+
     private String uID;
     private String password;
 
@@ -21,17 +21,13 @@ public class User {
     }
 
 
-    public String getUserName() {
-        return userName;
-    }
+
 
     public String getDisplayName() {
         return displayName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+
 
     public String getPhoneNumber() {
         return phoneNumber;

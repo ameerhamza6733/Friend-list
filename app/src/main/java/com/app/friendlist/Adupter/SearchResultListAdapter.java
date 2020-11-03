@@ -66,8 +66,15 @@ public class SearchResultListAdapter extends RecyclerView.Adapter<SearchResultLi
         holder.btAddFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context,"please wait",Toast.LENGTH_LONG).show();
-                friendViewModel.makeFriend(currentUser,searchUserList.get(holder.getAdapterPosition())).observe((MainActivity)context,observerFriend);
+                if (currentUser.getuID().equals(searchUserList.get(holder.getAdapterPosition()).getuID())){
+                    Toast.makeText(context,"You can't add your self as a friend",Toast.LENGTH_LONG).show();
+
+                }else {
+                    Toast.makeText(context,"please wait",Toast.LENGTH_LONG).show();
+
+                    friendViewModel.makeFriend(currentUser,searchUserList.get(holder.getAdapterPosition())).observe((MainActivity)context,observerFriend);
+
+                }
             }
         });
     }

@@ -56,12 +56,7 @@ public class MyFriendsListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        observerCurrentUser=new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                currentUser=user;
-            }
-        };
+
     }
 
     @Override
@@ -79,8 +74,19 @@ public class MyFriendsListFragment extends Fragment {
         recyclerView=view.findViewById(R.id.recylerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
          fabAddFromPhoneContant = view.findViewById(R.id.fabAddPersonFromContant);
-         loginViewModel=new ViewModelProvider(this).get(LoginViewModel.class);
-         loginViewModel.userLiveData().observe(getViewLifecycleOwner(),observerCurrentUser);
+        loginViewModel=new ViewModelProvider(this).get(LoginViewModel.class);
+        observerCurrentUser=new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                currentUser=user;
+                if (getActivity()!=null){
+                    ((MainActivity)getActivity()).getToolbar().setTitle("Friend List ("+currentUser.getDisplayName()+")" );
+
+                }
+            }
+        };
+        loginViewModel.userLiveData().observe(getViewLifecycleOwner(),observerCurrentUser);
+
 
     }
 
@@ -89,7 +95,7 @@ public class MyFriendsListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((MainActivity)getActivity()).getToolbar().setTitle("Friend List");
+
         fabAddFromPhoneContant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

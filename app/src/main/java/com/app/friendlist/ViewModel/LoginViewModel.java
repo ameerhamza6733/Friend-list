@@ -9,8 +9,11 @@ import androidx.lifecycle.ViewModel;
 import com.app.friendlist.Model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthEmailException;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class LoginViewModel extends ViewModel {
@@ -26,7 +29,9 @@ public class LoginViewModel extends ViewModel {
                 if (task.isSuccessful()){
                    liveData.setValue(SUCCESS);
                 }else {
-                    liveData.setValue(null);
+                    liveData.setValue(""+((FirebaseAuthException)task.getException()).getErrorCode());
+
+
                 }
             }
         });
@@ -38,7 +43,7 @@ public class LoginViewModel extends ViewModel {
         User user = new User();
         user.setEmail(firebaseUser.getEmail());
         user.setuID(firebaseUser.getUid());
-        user.setUserName(firebaseUser.getDisplayName());
+        user.setDisplayName(firebaseUser.getDisplayName());
         userMutableLiveData.setValue(user);
         return userMutableLiveData;
 
