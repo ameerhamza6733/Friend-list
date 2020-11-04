@@ -33,6 +33,7 @@ public class FriendViewModel extends ViewModel {
     private FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
     private List<Friend> userList;
     private String TAG="FriendViewModel";
+    private String lastQuery="";
 
     public LiveData<List<Friend>> getFriendList(){
 
@@ -84,11 +85,14 @@ public class FriendViewModel extends ViewModel {
                 }
             };
         }
-        database.getReference("users")
-                .orderByChild("displayName")
-                .startAt(user)
-                .endAt(user)
-                .addListenerForSingleValueEvent(searchByUserNameEventListener);
+       if (!lastQuery.equals(user)){
+           lastQuery=user;
+           database.getReference("users")
+                   .orderByChild("displayName")
+                   .startAt(user)
+                   .endAt(user)
+                   .addListenerForSingleValueEvent(searchByUserNameEventListener);
+       }
     return userSearchQureryResult;
     }
 

@@ -98,9 +98,23 @@ public class LoginFragment extends Fragment {
                 User user=new User();
                 user.setEmail(editTextEmail.getText().toString());
                 user.setPassword(editTextPassword.getText().toString());
-                loginViewModel.login(user).observe(getViewLifecycleOwner(),observerLogin);
+                if (isValid()){
+                    loginViewModel.login(user).observe(getViewLifecycleOwner(),observerLogin);
+                }
             }
         });
+    }
+    private boolean isValid(){
+        if (editTextPassword.getText().toString().isEmpty()){
+            Toast.makeText(getContext(),"Please enter password",Toast.LENGTH_LONG).show();
+
+            return false;
+        }
+        if (editTextEmail.getText().toString().isEmpty()){
+            Toast.makeText(getContext(),"Please enter email",Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
     }
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
