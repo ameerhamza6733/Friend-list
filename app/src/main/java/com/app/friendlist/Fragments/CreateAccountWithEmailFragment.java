@@ -23,6 +23,7 @@ import com.app.friendlist.MainActivity;
 import com.app.friendlist.Model.User;
 import com.app.friendlist.R;
 import com.app.friendlist.ViewModel.CreateAccountViewModel;
+import com.app.friendlist.ViewModel.LoginViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 
 
@@ -35,6 +36,8 @@ public class CreateAccountWithEmailFragment extends Fragment {
     private User user = new User();
     private Observer<String> updateUserProfile;
     private Observer<String> createUserInFirebaseObserver;
+    private Observer<String> loginObserver;
+    private LoginViewModel loginViewModel;
     private Button btCreateAccount;
     private EditText editTextEmail;
     private EditText tvEnterName;
@@ -82,9 +85,13 @@ public class CreateAccountWithEmailFragment extends Fragment {
             @Override
             public void onChanged(String s) {
                 if (s.equals(CreateAccountViewModel.SUCCESS)){
-                    ((MainActivity) getActivity()).replaceFragments(MyFriendsListFragment.class,"MyFriendsListFragment");
-
+                    User loginUser = new User();
+                    loginUser.setEmail(editTextEmail.getText().toString().toLowerCase());
+                    loginUser.setPassword(password.getText().toString());
+                    loginViewModel.login(loginUser).observe(getViewLifecycleOwner(),loginObserver);
                     Toast.makeText(getActivity(),"Your Account is created",Toast.LENGTH_LONG).show();
+                }else {
+                    Toast.makeText(getActivity(),"Error "+s,Toast.LENGTH_LONG).show();
                 }
             }
         };
@@ -103,6 +110,18 @@ public class CreateAccountWithEmailFragment extends Fragment {
                 }
             }
         };
+        loginObserver=new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                if (s.equals(CreateAccountViewModel.SUCCESS)){
+                    ((MainActivity) getActivity()).replaceFragments(MyFriendsListFragment.class,"MyFriendsListFragment");
+
+                }else {
+                    Toast.makeText(getActivity(),"Error "+s,Toast.LENGTH_LONG).show();
+
+                }
+            }
+        };
     }
 
     @Override
@@ -115,7 +134,7 @@ public class CreateAccountWithEmailFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        loginViewModel= new ViewModelProvider(this).get(LoginViewModel.class);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Create Account");
     }
 
@@ -146,6 +165,7 @@ public class CreateAccountWithEmailFragment extends Fragment {
     }
     private void createAccountNow(){
         progressBar.setVisibility(View.VISIBLE);
+
           createAccountViewModel =new  ViewModelProvider(this).get(CreateAccountViewModel.class);
         createAccountViewModel.createAccount(editTextEmail.getText().toString().toLowerCase(),password.getText().toString()).observe(this,observerCreateAccount);
     }

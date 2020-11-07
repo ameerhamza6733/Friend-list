@@ -37,9 +37,9 @@ public class FriendViewModel extends ViewModel {
 
     public LiveData<List<Friend>> getFriendList(){
 
-
-
-
+        if (userMutableLiveData==null){
+            Log.d(TAG,"geting friend list from server");
+            userMutableLiveData=new MutableLiveData<>();
             userList= new ArrayList<>();
             if (valueEventListener==null){
                 valueEventListener= new ValueEventListener() {
@@ -58,15 +58,17 @@ public class FriendViewModel extends ViewModel {
                     }
                 };
             }
-           if (userMutableLiveData==null){
+
                Log.d(TAG,"geting friend list from server");
+            if (userMutableLiveData==null)
                userMutableLiveData= new MutableLiveData<>();
                database.getReference("myFriendList")
                        .child(firebaseAuth.getCurrentUser().getUid())
                        .getRef()
                        .addListenerForSingleValueEvent(valueEventListener);
-           }
 
+
+        }
             return userMutableLiveData;
     }
 

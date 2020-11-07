@@ -83,24 +83,23 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        observerCurrentUser=new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                currentUser=user;
+
+                getSupportActionBar().setTitle("Friend List ("+currentUser.getDisplayName().toUpperCase()+")" );
+
+
+            }
+        };
 
 
         if (firebaseAuth.getCurrentUser()==null){
 
             replaceFragments(ChooseLoginOrCreateFragment.class,"ChooseLoginOrCreateFragment");
         }else {
-            LoginViewModel loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
-            observerCurrentUser=new Observer<User>() {
-                @Override
-                public void onChanged(User user) {
-                    currentUser=user;
 
-                       getSupportActionBar().setTitle("Friend List ("+currentUser.getDisplayName().toUpperCase()+")" );
-
-
-                }
-            };
-            loginViewModel.userLiveData().observe(MainActivity.this,observerCurrentUser);
 
             replaceFragments(MyFriendsListFragment.class,"MyFriendsListFragment");
         }
@@ -112,6 +111,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void replaceFragments(Class fragmentClass,String tag) {
 
+        if (tag.equals("MyFriendsListFragment")){
+            LoginViewModel loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+
+            loginViewModel.userLiveData().observe(MainActivity.this,observerCurrentUser);
+        }
 
         Fragment fragment = null;
         try {
