@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 if (firebaseAuth.getCurrentUser()!=null){
                     SharedPref.write(SharedPref.SEARCH_TERM,query);
+
                     replaceFragments(SearchFriendFragment.class,"SearchFriendFragment");
                 }else {
                     Toast.makeText(MainActivity.this, "Please login first", Toast.LENGTH_SHORT).show();
@@ -110,22 +111,20 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void replaceFragments(Class fragmentClass,String tag) {
+
+
         Fragment fragment = null;
         try {
             fragment = (Fragment) fragmentClass.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // Insert the fragment by replacing any existing fragment
 
 
-        if (fragmentManager.findFragmentByTag ( tag ) == null){
-            fragmentManager.beginTransaction().replace(R.id.fragment_contrainer, fragment).addToBackStack(tag)
-                    .commit();
-        }else {
-            fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag ( tag ));
-          //  fragmentManager.beginTransaction().replace(R.id.fragment_contrainer, fragmentManager.findFragmentByTag ( tag )).commit();
-        }
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment_contrainer, fragment,tag)
+                .addToBackStack(tag)
+                .commit();
 
     }
     @Override
@@ -134,11 +133,17 @@ public class MainActivity extends AppCompatActivity {
             searchView.closeSearch();
         } else {
 
-            if (fragmentManager.getBackStackEntryCount()==1){
+            if (fragmentManager.findFragmentById(R.id.fragment_contrainer) instanceof  MyFriendsListFragment){
                 closeApp();
             }else {
-                super.onBackPressed();
+               if (firebaseAuth.getCurrentUser()!=null){
+                   replaceFragments(MyFriendsListFragment.class,"MyFriendsListFragment");
+               }else {
+                   super.onBackPressed();
+               }
             }
+
+
 
         }
     }

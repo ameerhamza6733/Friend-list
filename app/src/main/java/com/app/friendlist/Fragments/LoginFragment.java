@@ -100,6 +100,7 @@ public class LoginFragment extends Fragment {
                 user.setPassword(editTextPassword.getText().toString());
                 if (isValid()){
                     loginViewModel.login(user).observe(getViewLifecycleOwner(),observerLogin);
+
                 }
             }
         });
